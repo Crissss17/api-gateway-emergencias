@@ -4,7 +4,6 @@ import { GraphQLModule } from '@nestjs/graphql';
 import { ApolloDriver, ApolloDriverConfig } from '@nestjs/apollo';
 import { join } from 'path';
 import { IncidentesModule } from './incidentes/incidentes.module';
-import { RecursosModule } from './recursos/recursos.module';
 import { DashboardModule } from './dashboard/dashboard.module';
 import { WhatsappModule } from './whatsapp/whatsapp.module';
 
@@ -27,7 +26,6 @@ import { WhatsappModule } from './whatsapp/whatsapp.module';
       },
     }),
     IncidentesModule,
-    RecursosModule,
     DashboardModule,
     WhatsappModule,
   ],

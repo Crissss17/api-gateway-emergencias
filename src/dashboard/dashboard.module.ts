@@ -1,12 +1,14 @@
 import { Module } from '@nestjs/common';
 import { DashboardService } from './dashboard.service';
-import { DashboardResolver } from './dashboard.resolver';
-import { IncidentesModule } from '../incidentes/incidentes.module';
-import { RecursosModule } from '../recursos/recursos.module';
+import { IncidentesService } from 'src/incidentes/incidentes.service';
+import { WhatsappModule } from '../whatsapp/whatsapp.module';
+import { HttpModule } from '@nestjs/axios'; // <-- ¡IMPORTANTE!
 
 @Module({
-  imports: [IncidentesModule, RecursosModule],
-  providers: [DashboardService, DashboardResolver],
-  exports: [DashboardService],
+  imports: [
+    WhatsappModule,
+    HttpModule, // <-- ¡AGREGA ESTO!
+  ],
+  providers: [DashboardService, IncidentesService],
 })
 export class DashboardModule {}

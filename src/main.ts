@@ -10,16 +10,20 @@ async function bootstrap() {
   app.useGlobalPipes(new ValidationPipe({
     whitelist: true,
     transform: true,
-    forbidNonWhitelisted: true,
+    forbidNonWhitelisted: false,
   }));
 
   // Habilitar CORS para el frontend
   app.enableCors({
-    origin: process.env.FRONTEND_URL || 'http://localhost:3000',
+    origin: [
+      'https://studio.apollographql.com',
+      //'https://6768-179-8-40-26.ngrok-free.app', // o tu dominio ngrok actual
+      'http://localhost:3003',
+    ],
     credentials: true,
   });
 
-  const port = process.env.PORT || 3000;
+  const port = process.env.PORT || 3003;
   await app.listen(port);
   
   logger.log(`🚀 API Gateway corriendo en puerto ${port}`);

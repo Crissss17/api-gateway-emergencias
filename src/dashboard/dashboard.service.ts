@@ -1,53 +1,42 @@
 import { Injectable, Logger } from '@nestjs/common';
-import { IncidentesService } from '../incidentes/incidentes.service';
-import { RecursosService } from '../recursos/recursos.service';
+import { IncidentesService } from 'src/incidentes/incidentes.service';
 import { WhatsappService } from '../whatsapp/whatsapp.service';
 
 @Injectable()
 export class DashboardService {
-  private readonly logger = new Logger(DashboardService.name);
-
   constructor(
     private readonly incidentesService: IncidentesService,
-    private readonly recursosService: RecursosService,
-    private readonly whatsappService: WhatsappService,
+    private readonly whatsappService: WhatsappService, // <-- aquí
   ) {}
 
+  private readonly logger = new Logger(DashboardService.name);
   async getDashboardResumen(): Promise<any> {
     try {
       this.logger.log('Generando resumen del dashboard...');
 
       const [
         estadisticasIncidentes,
-        estadisticasRecursos,
         incidentes,
-        recursos,
       ] = await Promise.all([
         this.incidentesService.getEstadisticas(),
-        this.recursosService.getEstadisticas(),
         this.incidentesService.findAll({ estado: 'pendiente' }, 10),
-        this.recursosService.findAll(),
       ]);
 
       const incidentesActivos = estadisticasIncidentes.porEstado.pendiente + 
                                estadisticasIncidentes.porEstado.en_proceso;
       
       const incidentesCriticos = estadisticasIncidentes.porPrioridad.critica || 0;
-      
-      const recursosDisponibles = recursos.filter(r => r.disponible).length;
-      const recursosEnUso = recursos.filter(r => !r.disponible).length;
+
+      // Si quieres mostrar recursos_asignados, obténlos del propio incidente, pero ya NO hay recursos globales
 
       const alertas = this.generarAlertas(
         incidentesCriticos,
-        recursosDisponibles,
         incidentes
       );
 
       const resumen = {
         incidentesActivos,
         incidentesCriticos,
-        recursosDisponibles,
-        recursosEnUso,
         ultimosIncidentes: incidentes.slice(0, 5),
         alertas,
       };
@@ -63,7 +52,6 @@ export class DashboardService {
 
   private generarAlertas(
     incidentesCriticos: number,
-    recursosDisponibles: number,
     incidentes: any[]
   ): any[] {
     const alertas: any[] = [];
@@ -76,16 +64,6 @@ export class DashboardService {
         mensaje: `Hay ${incidentesCriticos} incidente(s) crítico(s) que requieren atención inmediata`,
         timestamp: ahora,
         nivel: 'critico',
-      });
-    }
-
-    if (recursosDisponibles < 3) {
-      alertas.push({
-        id: `recursos-${Date.now()}`,
-        tipo: 'recursos_limitados',
-        mensaje: `Solo quedan ${recursosDisponibles} recursos disponibles`,
-        timestamp: ahora,
-        nivel: recursosDisponibles === 0 ? 'critico' : 'alto',
       });
     }
 

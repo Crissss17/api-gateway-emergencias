@@ -25,9 +25,9 @@ export class IncidentesService {
   async findAll(filtro?: any, limit?: number, offset?: number): Promise<any[]> {
     try {
       const params = new URLSearchParams();
-      
       if (filtro?.estado) params.append('estado', filtro.estado);
       if (filtro?.tipo) params.append('tipo', filtro.tipo);
+      if (filtro?.prioridad) params.append('prioridad', filtro.prioridad);
       if (limit) params.append('limit', limit.toString());
       if (offset) params.append('offset', offset.toString());
 
@@ -35,7 +35,12 @@ export class IncidentesService {
         this.httpService.get(`${this.incidentesServiceUrl}/incidentes?${params}`)
       );
 
-      return response.data;
+      // MAPEO para asegurar que cada incidente tenga campo "id" y "descripcion"
+      return (response.data ?? []).map((incidente: any) => ({
+        ...incidente,
+        id: incidente.id ?? incidente._id ?? incidente.uuid ?? "",
+        descripcion: incidente.descripcion ?? incidente.description ?? incidente.desc ?? "",
+      }));
     } catch (error) {
       this.handleError('findAll', error);
     }
@@ -49,8 +54,12 @@ export class IncidentesService {
       const response = await firstValueFrom(
         this.httpService.get(`${this.incidentesServiceUrl}/incidentes/${id}`)
       );
-
-      return response.data;
+      const incidente = response.data;
+      return {
+        ...incidente,
+        id: incidente.id ?? incidente._id ?? incidente.uuid ?? "",
+        descripcion: incidente.descripcion ?? incidente.description ?? incidente.desc ?? "",
+      };
     } catch (error) {
       this.handleError('findOne', error);
     }
@@ -67,8 +76,12 @@ export class IncidentesService {
           createIncidenteInput
         )
       );
-
-      return response.data;
+      const incidente = response.data;
+      return {
+        ...incidente,
+        id: incidente.id ?? incidente._id ?? incidente.uuid ?? "",
+        descripcion: incidente.descripcion ?? incidente.description ?? incidente.desc ?? "",
+      };
     } catch (error) {
       this.handleError('create', error);
     }
@@ -85,8 +98,12 @@ export class IncidentesService {
           updateIncidenteInput
         )
       );
-
-      return response.data;
+      const incidente = response.data;
+      return {
+        ...incidente,
+        id: incidente.id ?? incidente._id ?? incidente.uuid ?? "",
+        descripcion: incidente.descripcion ?? incidente.description ?? incidente.desc ?? "",
+      };
     } catch (error) {
       this.handleError('update', error);
     }
@@ -100,7 +117,6 @@ export class IncidentesService {
       const response = await firstValueFrom(
         this.httpService.get(`${this.incidentesServiceUrl}/incidentes/stats/resumen`)
       );
-
       return response.data;
     } catch (error) {
       this.handleError('getEstadisticas', error);
@@ -111,20 +127,18 @@ export class IncidentesService {
    * Manejo centralizado de errores
    */
   private handleError(operation: string, error: any): never {
-    if (error.isAxiosError) {
+    if ((error as AxiosError).isAxiosError) {
       const axiosError = error as AxiosError;
       this.logger.error(
         `Error en ${operation}: ${axiosError.message}`,
-        axiosError.response?.data
+        JSON.stringify(axiosError.response?.data || '')
       );
-      
       throw new Error(
         `Error comunicándose con el servicio de incidentes: ${
           axiosError.response?.statusText || axiosError.message
         }`
       );
     }
-
     this.logger.error(`Error en ${operation}:`, error);
     throw error;
   }
