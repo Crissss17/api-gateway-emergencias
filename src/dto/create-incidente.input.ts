@@ -6,10 +6,26 @@ export class CreateIncidenteInput {
   descripcion: string;
 
   @Field()
-  tipo: string;
+  from: string;
+
+  @Field()
+  message_id: string;
+
+  @Field()
+  name: string;
 
   @Field()
   prioridad: string;
 
-  // Agrega más campos requeridos para crear un incidente
+  @Field()
+  text: string;
+
+  @Field()
+  timestamp: string;
+
+  @Field()
+  tipo: string;
+
+  @Field()
+  wa_id: string;
 }

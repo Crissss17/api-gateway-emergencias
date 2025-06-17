@@ -6,6 +6,7 @@ import { join } from 'path';
 import { IncidentesModule } from './incidentes/incidentes.module';
 import { DashboardModule } from './dashboard/dashboard.module';
 import { WhatsappModule } from './whatsapp/whatsapp.module';
+import { UsersModule } from './usuarios/users.module';
 
 @Module({
   imports: [
@@ -28,6 +29,7 @@ import { WhatsappModule } from './whatsapp/whatsapp.module';
     IncidentesModule,
     DashboardModule,
     WhatsappModule,
+    UsersModule, // <--- y esto
   ],
   controllers: [],
   providers: [],

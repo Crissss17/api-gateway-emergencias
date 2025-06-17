@@ -1,4 +1,4 @@
-import { InputType, Field } from '@nestjs/graphql';
+import { InputType, Field, PartialType } from '@nestjs/graphql';
 
 @InputType()
 export class UpdateIncidenteInput {
@@ -9,10 +9,8 @@ export class UpdateIncidenteInput {
   estado?: string;
 
   @Field({ nullable: true })
-  tipo?: string;
-
-  @Field({ nullable: true })
   prioridad?: string;
 
-  // Agrega más campos que se puedan actualizar
+  @Field({ nullable: true })
+  tipo?: string;
 }

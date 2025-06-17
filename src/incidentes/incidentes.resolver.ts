@@ -1,10 +1,10 @@
 import { Resolver, Query, Mutation, Args, ID } from '@nestjs/graphql';
 import { IncidentesService } from './incidentes.service';
-import { IncidenteType } from 'src/dto/incidente.type';
-import { FiltroIncidenteInput } from 'src/dto/filtro-incidente.input';
-import { CreateIncidenteInput } from 'src/dto/create-incidente.input';
-import { UpdateIncidenteInput } from 'src/dto/update-incidente.input';
 import { Logger } from '@nestjs/common';
+import { UpdateIncidenteInput } from '../dto/update-incidente.input';
+import { FiltroIncidenteInput } from '../dto/filtro-incidente.input';
+import { IncidenteType } from '../dto/incidente.type';
+import { CreateIncidenteInput } from '../dto/create-incidente.input';
 
 @Resolver(() => IncidenteType)
 export class IncidentesResolver {
@@ -17,10 +17,10 @@ export class IncidentesResolver {
   @Query(() => [IncidenteType], { name: 'incidentes' })
   async incidentes(
     @Args('filtro', { type: () => FiltroIncidenteInput, nullable: true }) filtro?: FiltroIncidenteInput,
-    @Args('limit', { type: () => Number, nullable: true }) limit?: number,
-    @Args('offset', { type: () => Number, nullable: true }) offset?: number,
+    @Args('limit', { nullable: true }) limit?: number,
+    @Args('offset', { nullable: true }) offset?: number,
   ): Promise<IncidenteType[]> {
-    this.logger.log(`Query incidentes - Filtro: ${JSON.stringify(filtro)}`);
+    this.logger.log(`Query incidentes - Filtro recibido: ${JSON.stringify(filtro)}`);
     return this.incidentesService.findAll(filtro, limit, offset);
   }
 
@@ -40,10 +40,10 @@ export class IncidentesResolver {
 
   @Mutation(() => IncidenteType, { name: 'actualizarIncidente' })
   async actualizarIncidente(
-    @Args('id', { type: () => ID }) id: string,
+    @Args('id') id: string,
     @Args('input', { type: () => UpdateIncidenteInput }) updateIncidenteInput: UpdateIncidenteInput,
   ): Promise<IncidenteType> {
-    this.logger.log(`Mutation actualizarIncidente - ID: ${id}, Input: ${JSON.stringify(updateIncidenteInput)}`);
+    this.logger.log(`Input recibido en resolver: ${JSON.stringify(updateIncidenteInput)}`);
     return this.incidentesService.update(id, updateIncidenteInput);
   }
 }

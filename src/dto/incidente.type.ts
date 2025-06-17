@@ -12,10 +12,8 @@ export class IncidenteType {
   estado?: string;
 
   @Field({ nullable: true })
-  tipo?: string;
-
-  @Field({ nullable: true })
   prioridad?: string;
 
-  // Agrega aquí más campos según tu microservicio
+  @Field({ nullable: true })
+  tipo?: string;
 }
