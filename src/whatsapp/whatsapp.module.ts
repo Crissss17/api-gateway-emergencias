@@ -1,12 +1,12 @@
 import { Module } from '@nestjs/common';
-import { HttpModule } from '@nestjs/axios'; // <- ¡IMPORTANTE!
-import { ConfigModule } from '@nestjs/config'; // <- Opcional pero recomendado
+import { HttpModule } from '@nestjs/axios'; 
+import { ConfigModule } from '@nestjs/config'; 
 import { WhatsappService } from './whatsapp.service';
 
 @Module({
   imports: [
-    HttpModule,       // <-- ¡AGREGA ESTO!
-    ConfigModule,     // <-- Opcional, si usas ConfigService en el servicio
+    HttpModule,       
+    ConfigModule,     
   ],
   providers: [WhatsappService],
   exports: [WhatsappService],

@@ -6,18 +6,10 @@ async function bootstrap() {
   const logger = new Logger('Bootstrap');
   const app = await NestFactory.create(AppModule);
   
-  // Configurar validación global
-  // app.useGlobalPipes(new ValidationPipe({
-  //   whitelist: true,
-  //   transform: true,
-  //   forbidNonWhitelisted: false,
-  // }));
-
-  // Habilitar CORS para el frontend
+  
   app.enableCors({
     origin: [
       'https://studio.apollographql.com',
-      //'https://6768-179-8-40-26.ngrok-free.app', // o tu dominio ngrok actual
       'http://localhost:3003',
     ],
     credentials: true,

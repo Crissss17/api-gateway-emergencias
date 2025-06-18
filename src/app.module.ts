@@ -3,6 +3,8 @@ import { ConfigModule } from '@nestjs/config';
 import { GraphQLModule } from '@nestjs/graphql';
 import { ApolloDriver, ApolloDriverConfig } from '@nestjs/apollo';
 import { join } from 'path';
+import { ClientsModule, Transport } from '@nestjs/microservices';
+
 import { IncidentesModule } from './incidentes/incidentes.module';
 import { DashboardModule } from './dashboard/dashboard.module';
 import { WhatsappModule } from './whatsapp/whatsapp.module';
@@ -26,10 +28,21 @@ import { UsersModule } from './usuarios/users.module';
         'subscriptions-transport-ws': true,
       },
     }),
+    ClientsModule.register([
+      {
+        name: 'USER_PACKAGE',
+        transport: Transport.GRPC,
+        options: {
+          url: 'localhost:50051',
+          package: 'user',
+          protoPath: join(process.cwd(), 'proto/user.proto'),
+        },
+      },
+    ]),
     IncidentesModule,
     DashboardModule,
     WhatsappModule,
-    UsersModule, // <--- y esto
+    UsersModule, 
   ],
   controllers: [],
   providers: [],

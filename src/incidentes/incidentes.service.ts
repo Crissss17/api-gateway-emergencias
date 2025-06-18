@@ -97,7 +97,7 @@ export class IncidentesService {
     this.logger.log('updateIncidenteInput keys: ' + Object.keys(updateIncidenteInput));
     this.logger.log('updateIncidenteInput raw: ' + JSON.stringify(updateIncidenteInput));
     
-    // CORRECCIÓN: convertir a objeto plano
+    
     const plainPayload = { ...updateIncidenteInput };
     this.logger.log('Payload enviado al microservicio: ' + JSON.stringify(plainPayload));
 

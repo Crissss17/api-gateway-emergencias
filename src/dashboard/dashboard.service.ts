@@ -6,7 +6,7 @@ import { WhatsappService } from '../whatsapp/whatsapp.service';
 export class DashboardService {
   constructor(
     private readonly incidentesService: IncidentesService,
-    private readonly whatsappService: WhatsappService, // <-- aquí
+    private readonly whatsappService: WhatsappService, 
   ) {}
 
   private readonly logger = new Logger(DashboardService.name);
@@ -27,7 +27,7 @@ export class DashboardService {
       
       const incidentesCriticos = estadisticasIncidentes.porPrioridad.critica || 0;
 
-      // Si quieres mostrar recursos_asignados, obténlos del propio incidente, pero ya NO hay recursos globales
+     
 
       const alertas = this.generarAlertas(
         incidentesCriticos,
