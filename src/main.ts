@@ -2,17 +2,18 @@ import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
 import { Logger } from '@nestjs/common';
 
-async function bootstrap() {
+export async function bootstrap() {
   const logger = new Logger('Bootstrap');
   const app = await NestFactory.create(AppModule);
   
   
   app.enableCors({
-    origin: [
-      'https://studio.apollographql.com',
-      'http://localhost:3003',
-    ],
-    credentials: true,
+  origin: [
+    'https://studio.apollographql.com',
+    'http://localhost:5173', // <--- AGREGA ESTA LÍNEA
+    'http://localhost:3003',
+  ],
+  credentials: true,
   });
 
   const port = process.env.PORT || 3003;
